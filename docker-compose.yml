@@ -1,0 +1,79 @@
+version: "3.9"
+
+# ============================================================
+# Isocode — Township Facility Management MVP
+# Multi-container orchestration (ARM64 / Apple Silicon + x86_64)
+# ============================================================
+
+services:
+
+  # ── 1. PostgreSQL Database ─────────────────────────────────
+  db:
+    image: postgres:16-alpine
+    container_name: isocode_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB:       isocode_db
+      POSTGRES_USER:     isocode_user
+      POSTGRES_PASSWORD: isocode_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U isocode_user -d isocode_db"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+    networks:
+      - isocode_net
+
+  # ── 2. Spring Boot Backend ──────────────────────────────────
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: isocode_backend
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DB_HOST:        db
+      DB_PORT:        5432
+      DB_NAME:        isocode_db
+      DB_USER:        isocode_user
+      DB_PASS:        isocode_pass
+      LLM_API_KEY:    ${LLM_API_KEY:-}
+      LLM_BASE_URL:   ${LLM_BASE_URL:-https://generativelanguage.googleapis.com/v1beta/openai}
+      LLM_MODEL:      ${LLM_MODEL:-gemini-1.5-flash}
+      SPRING_PROFILES_ACTIVE: docker
+    ports:
+      - "8080:8080"
+    networks:
+      - isocode_net
+
+  # ── 3. Next.js Frontend ─────────────────────────────────────
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: isocode_frontend
+    restart: unless-stopped
+    depends_on:
+      - backend
+    environment:
+      NEXT_PUBLIC_API_URL: http://backend:8080
+    ports:
+      - "3000:3000"
+    networks:
+      - isocode_net
+
+# ── Volumes & Networks ──────────────────────────────────────
+volumes:
+  pgdata:
+    driver: local
+
+networks:
+  isocode_net:
+    driver: bridge

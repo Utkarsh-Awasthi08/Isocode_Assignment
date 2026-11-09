@@ -1,0 +1,36 @@
+# OS files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# IDE & Editor files
+.idea/
+.vscode/
+*.iml
+*.iws
+*.ipr
+*.swp
+*.swo
+
+# Backend build artifacts
+backend/target/
+backend/*.log
+backend/.mvn/
+
+# Frontend build artifacts & dependencies
+frontend/node_modules/
+frontend/.next/
+frontend/out/
+frontend/build/
+frontend/*.log
+frontend/.env*.local
+
+# Environment & secret files
+.env
+.env.local
+*.key
+*.pem

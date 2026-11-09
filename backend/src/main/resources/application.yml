@@ -1,0 +1,58 @@
+spring:
+  application:
+    name: isocode-backend
+
+  # JSON serialization — use ISO-8601 strings for dates
+  jackson:
+    serialization:
+      write-dates-as-timestamps: false
+    deserialization:
+      fail-on-unknown-properties: false
+    default-property-inclusion: non_null
+    time-zone: Asia/Kolkata
+
+  # File upload limits (CSV uploads)
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 6MB
+
+  datasource:
+    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:isocode_db}?stringtype=unspecified
+    username: ${DB_USER:isocode_user}
+    password: ${DB_PASS:isocode_pass}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  flyway:
+    enabled: true
+    locations: classpath:db/migration
+    baseline-on-migrate: true
+
+server:
+  port: 8080
+
+app:
+  llm:
+    # API key for your chosen provider (supports LLM_API_KEY, GEMINI_API_KEY, or OPENAI_API_KEY)
+    api-key: ${LLM_API_KEY:${GEMINI_API_KEY:${OPENAI_API_KEY:}}}
+    # OpenAI-compatible base URL — swap to change provider:
+    #   Gemini  → https://generativelanguage.googleapis.com/v1beta/openai  (default)
+    #   OpenAI  → https://api.openai.com/v1
+    #   Groq    → https://api.groq.com/openai/v1
+    #   Mistral → https://api.mistral.ai/v1
+    #   Ollama  → http://localhost:11434/v1
+    base-url: ${LLM_BASE_URL:https://generativelanguage.googleapis.com/v1beta/openai}
+    # Model name as accepted by the chosen provider
+    model: ${LLM_MODEL:gemini-1.5-flash}
+
+logging:
+  level:
+    com.isocode: DEBUG
+    org.springframework.web: INFO

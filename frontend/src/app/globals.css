@@ -1,0 +1,75 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  :root {
+    --background: #FAFAFA;
+    --surface: #FFFFFF;
+    --border: #E5E7EB;
+  }
+
+  body {
+    @apply bg-background text-text-primary font-sans antialiased;
+  }
+
+  * {
+    @apply border-border;
+  }
+}
+
+@layer components {
+  .card {
+    @apply bg-surface rounded-xl shadow-card border border-border p-4;
+  }
+
+  .btn-primary {
+    @apply bg-accent hover:bg-accent-hover text-white font-medium px-4 py-2.5 rounded-lg transition-colors duration-150 text-sm;
+  }
+
+  .btn-secondary {
+    @apply bg-white hover:bg-gray-50 text-text-primary border border-border font-medium px-4 py-2.5 rounded-lg transition-colors duration-150 text-sm;
+  }
+
+  .btn-danger {
+    @apply bg-danger hover:bg-red-700 text-white font-medium px-4 py-2.5 rounded-lg transition-colors duration-150 text-sm;
+  }
+
+  .badge {
+    @apply inline-flex items-center px-2 py-0.5 rounded-full text-xs font-medium;
+  }
+
+  .badge-red {
+    @apply badge bg-danger-light text-danger;
+  }
+
+  .badge-green {
+    @apply badge bg-success-light text-success;
+  }
+
+  .badge-yellow {
+    @apply badge bg-warning-light text-warning;
+  }
+
+  .badge-blue {
+    @apply badge bg-accent-light text-accent;
+  }
+
+  .badge-gray {
+    @apply badge bg-gray-100 text-gray-600;
+  }
+  
+  .input {
+    @apply w-full border border-border rounded-lg px-3 py-2.5 text-sm text-text-primary placeholder-text-secondary focus:outline-none focus:ring-2 focus:ring-accent focus:border-transparent transition;
+  }
+
+  .label {
+    @apply block text-xs font-medium text-text-secondary mb-1 uppercase tracking-wide;
+  }
+  
+  .section-title {
+    @apply text-sm font-semibold text-text-secondary uppercase tracking-wider;
+  }
+}
