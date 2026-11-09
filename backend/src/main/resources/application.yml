@@ -18,9 +18,9 @@ spring:
       max-request-size: 6MB
 
   datasource:
-    url: jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:isocode_db}?stringtype=unspecified
-    username: ${DB_USER:isocode_user}
-    password: ${DB_PASS:isocode_pass}
+    url: ${SPRING_DATASOURCE_URL:jdbc:postgresql://${DB_HOST:localhost}:${DB_PORT:5432}/${DB_NAME:isocode_db}?stringtype=unspecified}
+    username: ${SPRING_DATASOURCE_USERNAME:${DB_USER:isocode_user}}
+    password: ${SPRING_DATASOURCE_PASSWORD:${DB_PASS:isocode_pass}}
     driver-class-name: org.postgresql.Driver
   jpa:
     hibernate:
@@ -36,7 +36,7 @@ spring:
     baseline-on-migrate: true
 
 server:
-  port: 8080
+  port: ${PORT:8080}
 
 app:
   llm:
